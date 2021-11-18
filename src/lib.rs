@@ -5,8 +5,8 @@ use yada::{DoubleArray, builder::DoubleArrayBuilder};
 pub struct Map<K, V>
     where K: Deref<Target = [u8]> + std::convert::AsRef<[u8]>
 {
-    trie: DoubleArray<Vec<u8>>,
-    data: Vec<V>,
+    pub trie: DoubleArray<Vec<u8>>,
+    pub data: Vec<V>,
     phantom: std::marker::PhantomData<K>
 }
 
