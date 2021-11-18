@@ -1,4 +1,4 @@
-use yada::{DoubleArray, builder::DoubleArrayBuilder};
+use yada_mod::{DoubleArray, builder::DoubleArrayBuilder};
 
 pub struct Map<V>
 {
