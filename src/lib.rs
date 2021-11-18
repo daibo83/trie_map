@@ -14,21 +14,18 @@ impl<K, V> Map<K, V>
     where K: Deref<Target = [u8]> + std::convert::AsRef<[u8]>
 {
     /// Creates a new map from a iterator of key, value pairs that has to be presorted
-    pub fn build(pairs: impl Iterator<Item = (K, V)>, size_hint: usize) -> std::io::Result<Self> {
+    pub fn build(pairs: impl Iterator<Item = (K, V)>, size_hint: usize) -> Option<Self> {
         let mut keys: Vec<(K, u32)> = Vec::with_capacity(size_hint);
         let mut data: Vec<V> = Vec::with_capacity(size_hint);
         for (index, (key, value)) in pairs.enumerate() {
             keys.push((key, index as u32));
             data.push(value);
         }
-        match DoubleArrayBuilder::build(&keys) {
-            Some(bytes) => Ok(Map {
-                trie: DoubleArray::new(bytes),
-                data,
-                phantom: std::marker::PhantomData
-            }),
-            None => Err(std::io::Error::new(std::io::ErrorKind::Other, "Failed to build trie"))
-        }
+        Some(Map {
+            trie: DoubleArray::new(DoubleArrayBuilder::build(&keys)?),
+            data,
+            phantom: std::marker::PhantomData
+        })
     }
     /// Returns the value associated with the key
     /// Returns None if the key is not found
